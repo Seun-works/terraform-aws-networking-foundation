@@ -1,5 +1,6 @@
 # Purpose: Define the input variables for the networking module
 variable "vpc_cidr" {
+  description = "This is the CIDR block and name for the VPC"
   type = object({
     name = string
     cidr = string
@@ -12,6 +13,7 @@ variable "vpc_cidr" {
 }
 
 variable "subnet_config" {
+  description = "This is the configuration for the subnets"
   type = map(object({
     cidr = list(string)
     azs = list(string)
