@@ -4,17 +4,18 @@ locals {
 
   outputs_public_subnets = {
     for key in keys(local.public_subnets) : key => {
-      id                = aws_subnet.main_subnet[key].id
-      availability_zone = aws_subnet.main_subnet[key].availability_zone
+      id   = aws_subnet.main_subnet[key].id
+      tags = aws_subnet.aws_subnet.main_subnet[key].tags_all
     }
   }
 
   outputs_private_subnets = {
     for key in keys(local.private_subnets) : key => {
-      id                = aws_subnet.main_subnet[key].id
-      availability_zone = aws_subnet.main_subnet[key].availability_zone
+      id   = aws_subnet.main_subnet[key].id
+      tags = aws_subnet.aws_subnet.main_subnet[key].tags_all
     }
   }
+
 }
 
 resource "aws_vpc" "main" {
@@ -30,10 +31,7 @@ resource "aws_subnet" "main_subnet" {
   cidr_block        = var.subnet_config[each.key].cidr[0]
   availability_zone = var.subnet_config[each.key].azs[0]
 
-  tags = {
-    Name   = each.key
-    Access = each.value.public ? "Public" : "Private"
-  }
+  tags = var.subnet_config[each.key].tags
 
   lifecycle {
     precondition {

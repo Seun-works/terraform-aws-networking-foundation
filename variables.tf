@@ -19,11 +19,14 @@ variable "subnet_config" {
   - cidr: A list of CIDR blocks for the subnet
   - azs: A list of availability zones for the subnet
   - public: A boolean value to determine if the subnet is public or private
+  - tags: A map of tags to apply to the subnet
   EOT
   type = map(object({
-    cidr = list(string)
-    azs  = list(string)
-  public = optional(bool, false) }))
+    cidr   = string
+    azs    = string
+    public = optional(bool, false)
+    tags   = optional(map(string))
+  }))
 
   validation {
     condition     = alltrue([for key, value in var.subnet_config : alltrue([for cidr in value.cidr : can(cidrnetmask(cidr))])])
