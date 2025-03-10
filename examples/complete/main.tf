@@ -15,7 +15,7 @@ module "vpc" {
     subnet_2 = {
       cidr = ["10.0.1.0/24"]
       azs  = ["us-east-1a"]
-      # Private subnets are identified by the public attribute not being defined as it defaults to true
+      # Private subnets are identified by the public attribute not being defined as it defaults to false
     },
 
   }
