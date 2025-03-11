@@ -29,7 +29,7 @@ resource "aws_subnet" "main_subnet" {
   vpc_id            = aws_vpc.main.id
   for_each          = var.subnet_config
   cidr_block        = var.subnet_config[each.key].cidr
-  availability_zone = var.subnet_config[each.key].azs
+  availability_zone = var.subnet_config[each.key].az
   map_public_ip_on_launch = var.subnet_config[each.key].public
 
 
