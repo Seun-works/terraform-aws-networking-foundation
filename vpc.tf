@@ -37,8 +37,8 @@ resource "aws_subnet" "main_subnet" {
 
   lifecycle {
     precondition {
-      condition     = contains(data.aws_availability_zones.available_zones.names, var.subnet_config[each.key].azs)
-      error_message = "Availability zone ${var.subnet_config[each.key].azs} is not available in the region"
+      condition     = contains(data.aws_availability_zones.available_zones.names, var.subnet_config[each.key].az)
+      error_message = "Availability zone ${var.subnet_config[each.key].az} is not available in the region"
     }
   }
 }
