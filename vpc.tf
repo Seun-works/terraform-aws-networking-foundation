@@ -5,14 +5,14 @@ locals {
   outputs_public_subnets = {
     for key in keys(local.public_subnets) : key => {
       id   = aws_subnet.main_subnet[key].id
-      tags = aws_subnet.aws_subnet.main_subnet[key].tags_all
+      tags = var.subnet_config[key].tags
     }
   }
 
   outputs_private_subnets = {
     for key in keys(local.private_subnets) : key => {
       id   = aws_subnet.main_subnet[key].id
-      tags = aws_subnet.aws_subnet.main_subnet[key].tags_all
+      tags = var.subnet_config[key].tags
     }
   }
 
@@ -28,15 +28,17 @@ resource "aws_vpc" "main" {
 resource "aws_subnet" "main_subnet" {
   vpc_id            = aws_vpc.main.id
   for_each          = var.subnet_config
-  cidr_block        = var.subnet_config[each.key].cidr[0]
-  availability_zone = var.subnet_config[each.key].azs[0]
+  cidr_block        = var.subnet_config[each.key].cidr
+  availability_zone = var.subnet_config[each.key].azs
+  map_public_ip_on_launch = var.subnet_config[each.key].public
+
 
   tags = var.subnet_config[each.key].tags
 
   lifecycle {
     precondition {
-      condition     = contains(data.aws_availability_zones.available_zones.names, var.subnet_config[each.key].azs[0])
-      error_message = "Availability zone ${var.subnet_config[each.key].azs[0]} is not available in the region"
+      condition     = contains(data.aws_availability_zones.available_zones.names, var.subnet_config[each.key].azs)
+      error_message = "Availability zone ${var.subnet_config[each.key].azs} is not available in the region"
     }
   }
 }
